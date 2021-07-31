@@ -353,10 +353,11 @@ public class Speedometer extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();
+        boolean isInCircle = (event.getX() - (radius)) * (event.getX() - (radius))
+                + (event.getY() - (radius)) * (event.getY() - (radius)) <= radius * radius;
         switch(action) {
             case (MotionEvent.ACTION_DOWN) :
-                boolean isInCircle = (event.getX() - (radius)) * (event.getX() - (radius))
-                        + (event.getY() - (radius)) * (event.getY() - (radius)) <= radius * radius;
+            case (MotionEvent.ACTION_MOVE) :
                 if (isInCircle) {
                     float angle = (float) (Math.toDegrees(
                             Math.atan2(event.getX() - centerX, centerY - event.getY())) + 360.0f)
@@ -366,11 +367,8 @@ public class Speedometer extends View {
                     setCurrentSpeed(convertAngleToSpeed(angle));
                 }
                 return true;
-            case (MotionEvent.ACTION_MOVE) :
-                //TODO
-                return true;
             case (MotionEvent.ACTION_UP) :
-                //TODO
+                this.performClick();
                 return true;
             case (MotionEvent.ACTION_CANCEL) :
                 //TODO
