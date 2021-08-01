@@ -50,6 +50,10 @@ public class Speedometer extends View {
 
     }
 
+    /**
+     *
+     * @param context
+     */
     public Speedometer(Context context) {
         super(context);
         matrix = new Matrix();
@@ -58,6 +62,11 @@ public class Speedometer extends View {
         init();
     }
 
+    /**
+     *
+     * @param context
+     * @param attrs
+     */
     public Speedometer(Context context, AttributeSet attrs) {
         super(context, attrs);
         matrix = new Matrix();
@@ -66,6 +75,12 @@ public class Speedometer extends View {
         init();
     }
 
+    /**
+     *
+     * @param context
+     * @param attrs
+     * @param defStyleAttr
+     */
     public Speedometer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         matrix = new Matrix();
@@ -74,6 +89,9 @@ public class Speedometer extends View {
         init();
     }
 
+    /**
+     *
+     */
     private void init(){
 
         //Background
@@ -129,6 +147,10 @@ public class Speedometer extends View {
         mSpeedTextPaint.setStrokeWidth(3.0f);
     }
 
+    /**
+     *
+     * @param canvas
+     */
     private void drawNeedleScrew(Canvas canvas){
         needleScrewPath.reset();
         needleScrewPath.moveTo(centerX, centerY);
@@ -140,6 +162,10 @@ public class Speedometer extends View {
         canvas.drawPath(needleScrewPath, needleScrewPaint);
     }
 
+    /**
+     *
+     * @param canvas
+     */
     private void drawNeedle(Canvas canvas) {
         linePath.reset();
         linePath.moveTo(centerX+5.0f, centerY+2.0f);
@@ -162,6 +188,10 @@ public class Speedometer extends View {
         canvas.restore();
     }
 
+    /**
+     *
+     * @param canvas
+     */
     private void drawScaleBackground(Canvas canvas){
         backgroundPath.reset();
         backgroundPath.addCircle(centerX,centerY,radius,Path.Direction.CW);
@@ -180,6 +210,10 @@ public class Speedometer extends View {
         canvas.drawPath(onBackgroundPath, onBackgroundPaint);
     }
 
+    /**
+     *
+     * @param canvas
+     */
     private void drawScale(Canvas canvas) {
         canvas.save();
         int textModulo;
@@ -243,6 +277,14 @@ public class Speedometer extends View {
 
     }
 
+    /**
+     *
+     * @param canvas
+     * @param position
+     * @param divisionRotation
+     * @param pX
+     * @param pY
+     */
     private void drawScaleText(Canvas canvas, int position, float divisionRotation,
                                float pX, float pY) {
         canvas.save();
@@ -262,6 +304,10 @@ public class Speedometer extends View {
         canvas.restore();
     }
 
+    /**
+     *
+     * @param canvas
+     */
     private void drawCurrentSpeedText(Canvas canvas){
         canvas.save();
         canvas.rotate(45.0f, centerX, centerY);
@@ -297,6 +343,12 @@ public class Speedometer extends View {
         }
     }
 
+    /**
+     *
+     * @param mode
+     * @param size
+     * @return
+     */
     private int chooseDimension(int mode, int size) {
         if (mode == MeasureSpec.AT_MOST || mode == MeasureSpec.EXACTLY) {
             return size;
@@ -306,12 +358,22 @@ public class Speedometer extends View {
         }
     }
 
+    /**
+     *
+     * @param speed
+     * @return
+     */
     private float convertSpeedToAngle(float speed){
         if (speed >= mMaxSpeed) return SCALE_RANGE;
         else if (speed <= mMinSpeed) return 0;
         else return SCALE_RANGE/mMaxSpeed*speed;
     }
 
+    /**
+     *
+     * @param angle
+     * @return
+     */
     private float convertAngleToSpeed(float angle){
         if (angle >= SCALE_RANGE) return mMaxSpeed;
         else if (angle <= 0) return 0;
@@ -381,10 +443,18 @@ public class Speedometer extends View {
         }
     }
 
+    /**
+     *
+     * @param listener
+     */
     public void setSpeedChangeListener(SpeedChangeListener listener){
         this.speedListener = listener;
     }
 
+    /**
+     *
+     * @param currentSpeed
+     */
     public void setCurrentSpeed(float currentSpeed) {
         this.mCurrentSpeed = currentSpeed;
         if (speedListener != null) speedListener.onSpeedChanged(currentSpeed);
