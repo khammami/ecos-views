@@ -2,10 +2,7 @@ package com.khammami.ecos.views
 
 import android.content.Context
 import android.graphics.*
-import com.khammami.ecos.views.Speedometer.SpeedChangeListener
 import android.util.AttributeSet
-import com.khammami.ecos.views.Speedometer
-import android.view.View.MeasureSpec
 import android.view.MotionEvent
 import android.view.View
 import kotlin.math.atan2
