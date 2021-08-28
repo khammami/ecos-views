@@ -25,10 +25,10 @@ class Speedometer : View {
     private var centerX = 0f
     private var centerY = 0f
     private var radius = 0f
-    private val mMaxSpeed = 127.0f
+    private var mMaxStepSpeed = 127.0f
     private val mMinSpeed = 0.0f
     private var mCurrentSpeed = 0f
-    var totalTicks = 0
+    private var totalTicks = 0
     private var speedListener: SpeedChangeListener? = null
 
     interface SpeedChangeListener {
@@ -129,7 +129,7 @@ class Speedometer : View {
         mSpeedTextPaint!!.style = Paint.Style.FILL_AND_STROKE
         mSpeedTextPaint!!.textSize = 0.05f
         mSpeedTextPaint!!.typeface = Typeface.MONOSPACE
-        mSpeedTextPaint!!.textAlign = Paint.Align.CENTER
+        mSpeedTextPaint!!.textAlign = Paint.Align.RIGHT
         mSpeedTextPaint!!.textSize = 45.0f
         mSpeedTextPaint!!.strokeWidth = 3.0f
     }
@@ -207,16 +207,16 @@ class Speedometer : View {
         val textModulo: Int
         val divisionRotation: Float
         //TODO Max Speed as an input
-        if (mMaxSpeed > 31) {
+        if (mMaxStepSpeed > 31) {
             totalTicks = 25
             divisionRotation = SCALE_RANGE / (totalTicks - 1)
             textModulo = 8
             //canvas.rotate(divisionRotation/3, centerX, centerY);
         } else {
-            totalTicks = mMaxSpeed.toInt() + 1
+            totalTicks = mMaxStepSpeed.toInt() + 1
             //while ((totalTicks-1) % 4 != 0) totalTicks = totalTicks+1;
             divisionRotation = SCALE_RANGE / (totalTicks - 1)
-            textModulo = if (mMaxSpeed % 4 != 0f) mMaxSpeed.toInt() / 3 else mMaxSpeed.toInt() / 2
+            textModulo = if (mMaxStepSpeed % 4 != 0f) mMaxStepSpeed.toInt() / 3 else mMaxStepSpeed.toInt() / 2
             //canvas.rotate(divisionRotation, centerX, centerY);
         }
         for (i in 0 until totalTicks) {
@@ -252,7 +252,7 @@ class Speedometer : View {
             canvas.rotate(divisionRotation, centerX, centerY)
         }
         canvas.restore()
-        //        if (mMaxSpeed > 28) canvas.rotate(divisionRotation/3, centerX, centerY);
+        //        if (mMaxStepSpeed > 28) canvas.rotate(divisionRotation/3, centerX, centerY);
 //        else canvas.rotate(divisionRotation, centerX, centerY);
     }
 
@@ -297,7 +297,7 @@ class Speedometer : View {
         canvas.rotate(180.0f, centerX, centerY - radius * 0.7f)
         canvas.drawText(
             String.format("%d", mCurrentSpeed.toInt()),
-            centerX, centerY - radius * 0.7f, mScaleTextPaint!!
+            centerX + radius * 0.136f, centerY - radius * 0.65f, mScaleTextPaint!!
         )
         canvas.restore()
     }
@@ -344,9 +344,9 @@ class Speedometer : View {
      */
     private fun convertSpeedToAngle(speed: Float): Float {
         return when {
-            speed >= mMaxSpeed -> SCALE_RANGE
+            speed >= mMaxStepSpeed -> SCALE_RANGE
             speed <= mMinSpeed -> 0f
-            else -> SCALE_RANGE / mMaxSpeed * speed
+            else -> SCALE_RANGE / mMaxStepSpeed * speed
         }
     }
 
@@ -357,9 +357,9 @@ class Speedometer : View {
      */
     private fun convertAngleToSpeed(angle: Float): Float {
         return when {
-            angle >= SCALE_RANGE -> mMaxSpeed
+            angle >= SCALE_RANGE -> mMaxStepSpeed
             angle <= 0 -> 0f
-            else -> (mMaxSpeed / SCALE_RANGE * angle).roundToLong().toFloat()
+            else -> (mMaxStepSpeed / SCALE_RANGE * angle).roundToLong().toFloat()
         }
     }
 
@@ -427,7 +427,7 @@ class Speedometer : View {
      * @param listener
      */
     fun setSpeedChangeListener(listener: SpeedChangeListener?) {
-        speedListener = listener
+        this.speedListener = listener
     }
 
     /**
@@ -435,9 +435,17 @@ class Speedometer : View {
      * @param currentSpeed
      */
     fun setCurrentSpeed(currentSpeed: Float) {
-        mCurrentSpeed = currentSpeed
-        if (speedListener != null) speedListener!!.onSpeedChanged(currentSpeed)
+        this.mCurrentSpeed = currentSpeed
+        if (this.speedListener != null) this.speedListener!!.onSpeedChanged(currentSpeed)
         invalidate()
+    }
+
+    /**
+     *
+     * @param maxSpeed
+     */
+    fun setMaxSpeed(maxSpeed: Float){
+        this.mMaxStepSpeed = maxSpeed
     }
 
     companion object {
